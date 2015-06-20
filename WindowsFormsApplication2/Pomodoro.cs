@@ -8,15 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WindowsFormsApplication2
+namespace Pomodoro
 {
-    public partial class Form1 : Form
+    public partial class Pomodoro : Form
     {
         private int pomodoroLength = 60 * 25;
         private int elapsed;
         private int timeLeft;
 
-        public Form1()
+        public Pomodoro()
         {
             InitializeComponent();
             resetTime();

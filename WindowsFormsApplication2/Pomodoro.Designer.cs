@@ -1,6 +1,6 @@
-﻿namespace WindowsFormsApplication2
+﻿namespace Pomodoro
 {
-    partial class Form1
+    partial class Pomodoro
     {
         /// <summary>
         /// Required designer variable.
@@ -60,7 +60,7 @@
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
             // 
-            // Form1
+            // Pomodoro
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -68,8 +68,8 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.maskedTextBox1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "Pomodoro";
+            this.Text = "Pomodoro";
             this.ResumeLayout(false);
             this.PerformLayout();
 
