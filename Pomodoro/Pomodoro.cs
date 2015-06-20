@@ -33,9 +33,9 @@ namespace Pomodoro
             if (timer1.Enabled)
             {
                 setLabel1Initial();
-                timer1.Enabled = false;
-                button1.Text = "Start";
-            } else
+                resetTimer();
+            }
+            else
             {
                 resetTime();
                 timer1.Enabled = true;
@@ -44,15 +44,29 @@ namespace Pomodoro
             }
         }
 
+        private void resetTimer()
+        {
+            timer1.Enabled = false;
+            button1.Text = "Start";
+        }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
             timeLeft = pomodoroLength - ++elapsed;
-            setLabel1();
+
+            if (timeLeft <= 0)
+            {
+                setLabel1(TimeSpan.FromSeconds(0));
+                timer1.Enabled = false;
+            } else
+            {
+                setLabel1(TimeSpan.FromSeconds(timeLeft));
+            }
+            
         }
 
-        private void setLabel1()
+        private void setLabel1(TimeSpan time)
         {
-            TimeSpan time = TimeSpan.FromSeconds(timeLeft);
             label1.Text = string.Format("{0}:{1:00}", time.Minutes, time.Seconds);
         }
 
