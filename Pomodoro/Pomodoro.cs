@@ -12,14 +12,12 @@ namespace Pomodoro
 {
     public partial class Pomodoro : Form
     {
-        private int pomodoroLength = 60 * 25;
+        private int pomodoroLength = 25 * 60;
         private int elapsed = 0;
 
         public Pomodoro()
         {
             InitializeComponent();
-
-            resetCountdownTime();
 
             countdown_timer.Interval = 1000; // aka 1 second
             countdown_timer.Tick += countdown_timer_Tick;
@@ -41,68 +39,73 @@ namespace Pomodoro
             }
         }
 
+        private void reset_Click(object sender, EventArgs e)
+        {
+            resetCountdown();
+        }
+
         private void countdown_timer_Tick(object sender, EventArgs e)
         {
-            ++elapsed;
-
-            if (timeLeft() == 0)
+            if (timeLeft() <= 0)
             {
-                countdown_timer.Enabled = false;
+                stopCountdown();
             }
+
+            incrementElapsedTime();
 
             setCountdownTimeText(TimeSpan.FromSeconds(timeLeft()));
         }
 
-
-
-        private void reset_Click(object sender, EventArgs e)
+        private void incrementElapsedTime()
         {
-            resetCountdownTime();
+            if (timeLeft() <= 0)
+            {
+                elapsed = pomodoroLength;
+            } else
+            {
+                ++elapsed;
+            }
         }
 
-        private void resetCountdownTime()
+        private void stopCountdown()
         {
-            setElapsed(0);
-            setCountdownTimeText(TimeSpan.FromSeconds(pomodoroLength));
+            countdown_timer.Enabled = false;
+            start_pause.Text = "Start";
+            startPauseButtonEnabled(false);
         }
 
         private void resetCountdown()
         {
+            setElapsed(0);
             countdown_timer.Enabled = false;
-            setStartPauseButtonEnabled(false);
+            start_pause.Text = "Start";
             resetButtonEnabled(false);
+            startPauseButtonEnabled(true);
+            setCountdownTimeText(TimeSpan.FromSeconds(pomodoroLength));
         }
 
         private void startCountdown()
         {
             countdown_timer.Enabled = true;
             countdown_timer_Tick(this, EventArgs.Empty);
-            setStartPauseButtonEnabled(true);
+            start_pause.Text = "Pause";
             resetButtonEnabled(true);
         }
 
         private void pauseCountdown()
         {
-            setStartPauseButtonEnabled(false);
+            start_pause.Text = "Start";
             countdown_timer.Enabled = false;
+        }
+
+        private void startPauseButtonEnabled(Boolean enabled)
+        {
+           start_pause.Enabled = enabled;
         }
 
         private void setCountdownTimeText(TimeSpan time)
         {
             countdown_text.Text = string.Format("{0}:{1:00}", time.Minutes, time.Seconds);
-        }
-
-        private void setStartPauseButtonEnabled(Boolean state)
-        {
-            if (state)
-            {
-                start_pause.Text = "Pause";
-            }
-            else
-            {
-                start_pause.Text = "Start";
-            }
-
         }
 
         private void resetButtonEnabled(Boolean enabled)
