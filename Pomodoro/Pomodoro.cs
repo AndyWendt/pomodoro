@@ -13,72 +13,116 @@ namespace Pomodoro
     public partial class Pomodoro : Form
     {
         private int pomodoroLength = 60 * 25;
-        private int elapsed;
-        private int timeLeft;
+        private int elapsed = 0;
 
         public Pomodoro()
         {
             InitializeComponent();
-            resetTime();
-            setLabel1Initial();
-            timer1.Interval = 1000;
-            timer1.Tick += timer1_Tick;
-            button1.Text = "Start";
-            
-            button1.Click += Button1_Click;
+
+            resetCountdownTime();
+
+            countdown_timer.Interval = 1000; // aka 1 second
+            countdown_timer.Tick += countdown_timer_Tick;
+
+            start_pause.Click += start_pause_Click;
+
+            reset.Click += reset_Click;
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+        private void start_pause_Click(object sender, EventArgs e)
         {
-            if (timer1.Enabled)
+            if (countdown_timer.Enabled)
             {
-                setLabel1Initial();
-                resetTimer();
+                pauseCountdown();
             }
             else
             {
-                resetTime();
-                timer1.Enabled = true;
-                timer1_Tick(this, EventArgs.Empty);
-                button1.Text = "Reset";
+                startCountdown();
             }
         }
 
-        private void resetTimer()
+        private void countdown_timer_Tick(object sender, EventArgs e)
         {
-            timer1.Enabled = false;
-            button1.Text = "Start";
-        }
+            ++elapsed;
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            timeLeft = pomodoroLength - ++elapsed;
-
-            if (timeLeft <= 0)
+            if (timeLeft() == 0)
             {
-                setLabel1(TimeSpan.FromSeconds(0));
-                timer1.Enabled = false;
-            } else
-            {
-                setLabel1(TimeSpan.FromSeconds(timeLeft));
+                countdown_timer.Enabled = false;
             }
-            
+
+            setCountdownTimeText(TimeSpan.FromSeconds(timeLeft()));
         }
 
-        private void setLabel1(TimeSpan time)
+
+
+        private void reset_Click(object sender, EventArgs e)
         {
-            label1.Text = string.Format("{0}:{1:00}", time.Minutes, time.Seconds);
+            resetCountdownTime();
         }
 
-        private void setLabel1Initial()
+        private void resetCountdownTime()
         {
-            label1.Text = "25:00";
+            setElapsed(0);
+            setCountdownTimeText(TimeSpan.FromSeconds(pomodoroLength));
         }
 
-        private void resetTime()
+        private void resetCountdown()
         {
-            elapsed = 0;
-            timeLeft = pomodoroLength;
+            countdown_timer.Enabled = false;
+            setStartPauseButtonEnabled(false);
+            resetButtonEnabled(false);
+        }
+
+        private void startCountdown()
+        {
+            countdown_timer.Enabled = true;
+            countdown_timer_Tick(this, EventArgs.Empty);
+            setStartPauseButtonEnabled(true);
+            resetButtonEnabled(true);
+        }
+
+        private void pauseCountdown()
+        {
+            setStartPauseButtonEnabled(false);
+            countdown_timer.Enabled = false;
+        }
+
+        private void setCountdownTimeText(TimeSpan time)
+        {
+            countdown_text.Text = string.Format("{0}:{1:00}", time.Minutes, time.Seconds);
+        }
+
+        private void setStartPauseButtonEnabled(Boolean state)
+        {
+            if (state)
+            {
+                start_pause.Text = "Pause";
+            }
+            else
+            {
+                start_pause.Text = "Start";
+            }
+
+        }
+
+        private void resetButtonEnabled(Boolean enabled)
+        {
+            reset.Enabled = enabled;
+        }
+
+        private int timeLeft()
+        {
+            return pomodoroLength - elapsed;
+        }
+
+        private int getElapsed()
+        {
+            return elapsed;
+        }
+
+        private void setElapsed(int seconds)
+        {
+            elapsed = seconds;
         }
     }
 }
