@@ -48,6 +48,7 @@ namespace Pomodoro
         {
             if (timeLeft() <= 0)
             {
+                GrowlHelper.simpleGrowl("Pomodoro Timer", "Your Pomodoro is finished!");
                 stopCountdown();
             }
 
