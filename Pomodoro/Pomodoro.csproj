@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Countdown.cs" />
     <Compile Include="GrowlHelper.cs" />
     <Compile Include="Pomodoro.cs">
       <SubType>Form</SubType>
